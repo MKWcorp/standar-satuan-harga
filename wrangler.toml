@@ -1,0 +1,10 @@
+name = "standarharga-demo"
+main = "worker/index.js"
+compatibility_date = "2025-10-01"
+workers_dev = false
+routes = [{ pattern = "standarharga.pluton.id", custom_domain = true }]
+
+[assets]
+directory = "./app"
+binding = "ASSETS"
+run_worker_first = true

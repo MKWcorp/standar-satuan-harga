@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://standarharga.pluton.id/sitemap.xml

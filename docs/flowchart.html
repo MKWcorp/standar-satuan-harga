@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Flowchart SIM SSH</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root { --ink: #101412; --ink2: #4c5450; --ink3: #868d89; --line: #dfe3df; --acc: #0f6b52; --acc2: #138a69; --soft: #e3f2ec;
+    --sa: #5b4bc4; --sa-bg: #efedfb; --ap: #0f6b52; --ap-bg: #e3f2ec; --us: #1c5cab; --us-bg: #e7f0fb; --pb: #a3620a; --pb-bg: #fcf1d8; --crit: #c4352f; --crit-bg: #fbe6e5; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: Inter, sans-serif; color: var(--ink); background: #fff; -webkit-font-smoothing: antialiased; }
+  .page { width: 1400px; padding: 44px 48px 40px; }
+  h1 { margin: 0; font-size: 30px; letter-spacing: -.02em; }
+  .lead { color: var(--ink2); font-size: 15px; margin: 6px 0 0; }
+  .meta { display: flex; gap: 18px; margin-top: 14px; font-size: 13px; color: var(--ink2); flex-wrap: wrap; }
+  .meta span { display: inline-flex; align-items: center; gap: 6px; }
+  .sw { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+
+  .board { position: relative; margin-top: 26px; }
+  .lanes { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .lane { border-radius: 16px; padding: 0 0 18px; min-height: 100%; }
+  .lane h2 { margin: 0; padding: 14px 16px; font-size: 15px; border-radius: 16px 16px 0 0; display: flex; justify-content: space-between; align-items: baseline; }
+  .lane h2 small { font-weight: 500; font-size: 12px; opacity: .8; }
+  .l-sa { background: #f8f7fe; } .l-sa h2 { background: var(--sa-bg); color: var(--sa); }
+  .l-ap { background: #f5faf8; } .l-ap h2 { background: var(--ap-bg); color: var(--ap); }
+  .l-us { background: #f6f9fe; } .l-us h2 { background: var(--us-bg); color: var(--us); }
+  .l-pb { background: #fffbf2; } .l-pb h2 { background: var(--pb-bg); color: var(--pb); }
+
+  .node { position: absolute; width: 290px; background: #fff; border: 1.5px solid var(--line); border-radius: 12px; padding: 11px 14px 12px; font-size: 13.5px; line-height: 1.4; box-shadow: 0 1px 2px rgba(0,0,0,.04); z-index: 2; }
+  .node b { display: block; font-size: 14px; margin-bottom: 3px; }
+  .node .n { position: absolute; top: -11px; left: -11px; width: 24px; height: 24px; border-radius: 50%; color: #fff; font-size: 12px; font-weight: 700; display: grid; place-items: center; }
+  .node.sa { border-color: #cfc8f3; } .node.sa .n { background: var(--sa); }
+  .node.ap { border-color: #b9ddd0; } .node.ap .n { background: var(--ap); }
+  .node.us { border-color: #bcd3f1; } .node.us .n { background: var(--us); }
+  .node.pb { border-color: #f0d9a6; } .node.pb .n { background: var(--pb); }
+  .node.auto { background: repeating-linear-gradient(135deg, #fff, #fff 8px, #f6f8f6 8px, #f6f8f6 16px); border-style: dashed; }
+  .node.dec { border-width: 2px; border-color: var(--ink); text-align: center; border-radius: 40px; padding: 12px 18px; }
+  .node.end { border-radius: 30px; text-align: center; font-weight: 600; }
+  .node.end.ok { background: var(--soft); border-color: var(--acc2); color: var(--acc); }
+  .node.end.no { background: var(--crit-bg); border-color: #efb9b6; color: var(--crit); }
+  .tag { display: inline-block; font-size: 11px; font-weight: 600; padding: 1px 7px; border-radius: 99px; margin-top: 6px; }
+  svg.wires { position: absolute; inset: 0; z-index: 1; overflow: visible; pointer-events: none; }
+  .lbl { position: absolute; z-index: 3; background: #fff; font-size: 12px; font-weight: 600; padding: 1px 7px; border-radius: 6px; border: 1px solid var(--line); white-space: nowrap; }
+  .lbl.ok { color: var(--acc); border-color: #b9ddd0; } .lbl.no { color: var(--crit); border-color: #efb9b6; } .lbl.wr { color: #8a5a00; border-color: #f0d9a6; }
+
+  .foot { display: grid; grid-template-columns: 1.2fr 1fr; gap: 18px; margin-top: 26px; }
+  .box { border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; font-size: 13.5px; line-height: 1.5; }
+  .box h3 { margin: 0 0 8px; font-size: 15px; }
+  .box ul { margin: 0; padding-left: 18px; }
+  .box li { margin: 3px 0; }
+  .credit { margin-top: 18px; font-size: 12px; color: var(--ink3); display: flex; justify-content: space-between; }
+</style>
+</head>
+<body>
+<div class="page">
+  <h1>Alur Kerja SIM Standar Satuan Harga</h1>
+  <p class="lead">Dari pengaturan sistem, pengusulan oleh instansi, approval, sampai standar harga terbit dan bisa dicari publik.</p>
+  <div class="meta">
+    <span><i class="sw" style="background:var(--sa)"></i>Super Admin</span>
+    <span><i class="sw" style="background:var(--ap)"></i>Approval (maks. 2 akun)</span>
+    <span><i class="sw" style="background:var(--us)"></i>User instansi (maks. 100 akun)</span>
+    <span><i class="sw" style="background:var(--pb)"></i>Pengunjung umum, tanpa login</span>
+    <span><i class="sw" style="border:1.5px dashed #868d89;background:#f6f8f6"></i>Otomatis oleh sistem</span>
+  </div>
+
+  <div class="board" id="board">
+    <div class="lanes" id="lanes">
+      <div class="lane l-sa"><h2>Super Admin <small>pengelola sistem</small></h2></div>
+      <div class="lane l-ap"><h2>Approval <small>maks. 2 akun</small></h2></div>
+      <div class="lane l-us"><h2>User instansi <small>maks. 100 akun</small></h2></div>
+      <div class="lane l-pb"><h2>Pengunjung umum <small>tanpa login</small></h2></div>
+    </div>
+    <svg class="wires" id="wires"></svg>
+  </div>
+
+  <div class="foot">
+    <div class="box"><h3>Keluaran (output) yang tersedia</h3>
+      <ul>
+        <li><b>Ekspor Excel</b>: data usulan per instansi, data konsolidasi semua instansi, standar harga per periode.</li>
+        <li><b>Ekspor PDF</b> berbentuk lampiran peraturan kepala daerah, kertas A4 potret, siap tanda tangan.</li>
+        <li><b>Time log</b> tiap usulan: siapa membuat, mengajukan, mengoreksi harga, menyetujui, kapan.</li>
+        <li><b>Kolom output</b> bisa diatur: Kode Kelompok, Barang, Spek, Satuan, Harga, Kode Rekening, TKDN, ditambah Time Stamp.</li>
+      </ul></div>
+    <div class="box"><h3>Aturan penting</h3>
+      <ul>
+        <li>Metode input <b>Grid atau Form</b>, hanya satu yang aktif.</li>
+        <li>Lewat tanggal tutup, periode <b>terkunci otomatis</b>: instansi tidak bisa input, approval tetap jalan.</li>
+        <li>Kembalikan dan Tolak <b>wajib</b> disertai catatan untuk instansi.</li>
+        <li>Seluruh data bisa <b>dicadangkan dan dipindah</b> ke hosting lain.</li>
+      </ul></div>
+  </div>
+  <div class="credit"><span>Alur demo dengan data fiktif, dapat disesuaikan dengan SOP pemda.</span><span>Pluton · pluton.id</span></div>
+</div>
+
+<script>
+// [id, lajur 0-3, baris, kelas, isi]
+const N = [
+  ['a1', 0, 0, 'sa', '<b>Atur sistem</b>Pilih metode input Grid atau Form, atur kolom (tampil, wajib, label), isi halaman depan (foto dan nama pemda).'],
+  ['a2', 1, 1, 'ap', '<b>Siapkan akun instansi</b>Impor Excel berisi nama instansi dan password, atau tambah satu per satu.'],
+  ['a3', 1, 2, 'ap', '<b>Buka periode pengusulan</b>Tentukan tanggal buka dan tutup (lock periode).'],
+  ['u1', 2, 3, 'us', '<b>Isi usulan barang</b>Grid: ketik atau tempel blok dari Excel. Form: satu barang per formulir. Atau impor file Excel.'],
+  ['u2', 2, 4, 'us auto', '<b>Draf tersimpan otomatis</b>Analisis harga tampil saat mengetik.'],
+  ['u3', 2, 5, 'us dec', '<b>Kolom wajib lengkap?</b>'],
+  ['u5', 2, 6, 'us', '<b>Ajukan</b>Bisa banyak baris sekaligus.'],
+  ['p1', 1, 7, 'ap auto', '<b>Analisis harga otomatis</b>Dibanding standar periode lalu (naik &gt;10%) dan usulan instansi lain untuk barang sama.'],
+  ['p2', 1, 8, 'ap dec', '<b>Keputusan approval</b>'],
+  ['x1', 2, 8, 'end no', 'Ditolak, instansi menerima catatan alasan'],
+  ['u6', 2, 9, 'us', '<b>Dikembalikan + catatan</b>Instansi memperbaiki lalu mengajukan ulang.'],
+  ['p3', 1, 9, 'ap', '<b>Setujui</b>Boleh koreksi harga. Bisa setujui massal semua yang wajar.'],
+  ['p4', 1, 10, 'end ok', 'Masuk standar harga periode berjalan'],
+  ['g1', 3, 10, 'pb', '<b>Cari standar harga</b>Pencarian barang yang sudah disetujui per periode, unduh Excel atau PDF.'],
+  ['a4', 0, 11, 'sa', '<b>Cadangan dan migrasi</b>Unduh seluruh data dalam satu berkas, pulihkan di hosting baru tanpa kehilangan data.'],
+  ['p5', 1, 11, 'ap', '<b>Tutup dan tetapkan periode</b>Data konsolidasi, ekspor Excel, cetak lampiran PDF potret.'],
+];
+// [dari, ke, sisi keluar, sisi masuk, label, kelas label]
+const E = [
+  ['a1', 'a2', 'r', 't'], ['a2', 'a3', 'b', 't'], ['a3', 'u1', 'r', 't'], ['u1', 'u2', 'b', 't'], ['u2', 'u3', 'b', 't'],
+  ['u3', 'u1', 'l', 'l', 'Tidak: baris ditandai merah', 'no'], ['u3', 'u5', 'b', 't', 'Ya', 'ok'],
+  ['u5', 'p1', 'l', 't'], ['p1', 'p2', 'b', 't'],
+  ['p2', 'p3', 'l', 'l', 'Setujui', 'ok'], ['p2', 'u6', 'b', 't', 'Kembalikan', 'wr'], ['p2', 'x1', 'r', 'l', 'Tolak', 'no'],
+  ['u6', 'u5', 'r', 'r'], ['p3', 'p4', 'b', 't'], ['p4', 'p5', 'b', 't'], ['p4', 'g1', 'r', 'l', 'tampil di portal publik', 'ok'],
+];
+const board = document.getElementById('board'), lanes = document.getElementById('lanes'), svg = document.getElementById('wires');
+const ROW = 128, TOP = 70, colW = (lanes.clientWidth - 14 * 3) / 4;
+N.forEach(([id, c, r, cls, html]) => {
+  const d = document.createElement('div'); d.className = 'node ' + cls; d.id = id; d.innerHTML = html;
+  if (!/dec|end/.test(cls)) { const n = document.createElement('span'); n.className = 'n'; d.prepend(n); }
+  d.style.left = (c * (colW + 14) + (colW - 290) / 2) + 'px'; d.style.top = (TOP + r * ROW) + 'px';
+  board.appendChild(d);
+});
+let k = 0; document.querySelectorAll('.node .n').forEach(n => (n.textContent = ++k));
+lanes.style.height = (TOP + 12 * ROW + 20) + 'px';
+document.querySelectorAll('.lane').forEach(l => (l.style.height = '100%'));
+const box = id => { const e = document.getElementById(id); return { x: e.offsetLeft, y: e.offsetTop, w: e.offsetWidth, h: e.offsetHeight }; };
+const pt = (b, s) => s === 'r' ? [b.x + b.w, b.y + b.h / 2] : s === 'l' ? [b.x, b.y + b.h / 2] : s === 't' ? [b.x + b.w / 2, b.y] : [b.x + b.w / 2, b.y + b.h];
+svg.setAttribute('width', board.clientWidth); svg.setAttribute('height', lanes.offsetHeight);
+svg.innerHTML = '<defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#4c5450"/></marker></defs>';
+E.forEach(([a, b, sa, sb, label, lc]) => {
+  const A = box(a), B = box(b), [x1, y1] = pt(A, sa), [x2, y2] = pt(B, sb);
+  let d;
+  if (sa === 'r' && sb === 'r') { const x = Math.max(x1, x2) + 26; d = `M${x1} ${y1}H${x}V${y2}H${x2}`; }
+  else if (sa === 'l' && sb === 'l') { const x = Math.min(x1, x2) - 26; d = `M${x1} ${y1}H${x}V${y2}H${x2}`; }
+  else if (sa === 'b' && sb === 'b') { const y = Math.max(y1, y2) + 22; d = `M${x1} ${y1}V${y}H${x2}V${y2}`; }
+  else if (sa === 't' && sb === 'r') { const y = y1 - 0; d = `M${x1} ${y1}V${y2}H${x2}`; }
+  else if ((sa === 'r' || sa === 'l') && sb === 't') d = `M${x1} ${y1}H${x2}V${y2}`;
+  else if (sa === 'b' && sb === 't' && Math.abs(x1 - x2) > 2) { const y = (y1 + y2) / 2; d = `M${x1} ${y1}V${y}H${x2}V${y2}`; }
+  else if ((sa === 'r' && sb === 'l') && Math.abs(y1 - y2) > 2) { const x = (x1 + x2) / 2; d = `M${x1} ${y1}H${x}V${y2}H${x2}`; }
+  else d = `M${x1} ${y1}L${x2} ${y2}`;
+  const p = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  p.setAttribute('d', d); p.setAttribute('fill', 'none'); p.setAttribute('stroke', '#4c5450'); p.setAttribute('stroke-width', '1.8'); p.setAttribute('marker-end', 'url(#ar)');
+  if ((sa === 'r' && sb === 'r') || (a === 'u3' && b === 'u1')) p.setAttribute('stroke-dasharray', '6 5');
+  svg.appendChild(p);
+  if (label) {
+    const L = document.createElement('div'); L.className = 'lbl ' + lc; L.textContent = label; board.appendChild(L);
+    const len = p.getTotalLength(), m = p.getPointAtLength(sa === sb ? len * 0.5 : Math.min(len * 0.45, 70));
+    let lx = m.x - L.offsetWidth / 2, ly = m.y - L.offsetHeight / 2;
+    if (sa === 'l' && sb === 'l') lx = m.x - L.offsetWidth - 6;
+    if (sa === 'r' && sb === 'l' && Math.abs(y1 - y2) < 2) ly = m.y - L.offsetHeight - 5;
+    L.style.left = lx + 'px'; L.style.top = ly + 'px';
+  }
+});
+</script>
+</body>
+</html>

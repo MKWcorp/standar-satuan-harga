@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Demo Aplikasi Standar Satuan Harga (SSH) Pemda | Pluton</title>
+<meta name="description" content="Demo aplikasi Standar Satuan Harga (SSH) pemda: usulan barang dari instansi lewat grid ala Excel, approval, lock periode, lampiran PDF, dan portal pencarian publik. Bisa dicoba langsung tanpa login.">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<link rel="canonical" href="https://standarharga.pluton.id/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Pluton">
+<meta property="og:locale" content="id_ID">
+<meta property="og:title" content="Demo Aplikasi Standar Satuan Harga (SSH) Pemda">
+<meta property="og:description" content="Dari usulan instansi sampai lampiran peraturan: grid ala Excel, approval, analisis harga, dan portal publik. Coba langsung, data fiktif.">
+<meta property="og:url" content="https://standarharga.pluton.id/">
+<meta property="og:image" content="https://standarharga.pluton.id/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0f6b52">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"SIM Standar Satuan Harga (demo)","url":"https://standarharga.pluton.id/","description":"Demo aplikasi pengelolaan Standar Satuan Harga pemerintah daerah: usulan instansi, approval, lock periode, lampiran PDF, dan portal pencarian publik. Seluruh data fiktif.","applicationCategory":"BusinessApplication","operatingSystem":"Web","inLanguage":"id","isAccessibleForFree":true,"image":"https://standarharga.pluton.id/og.jpg","creator":{"@type":"Organization","@id":"https://pluton.id/#organization","name":"Pluton","url":"https://pluton.id"}}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="shell">
+  <aside class="side">
+    <div class="brand">
+      <div><div class="brand-name" id="brandName"></div><div class="brand-sub" id="brandSub"></div></div>
+    </div>
+    <nav id="nav"></nav>
+    <div class="role-box">
+      <div class="role-label">Masuk sebagai (ganti untuk mencoba tiap peran)</div>
+      <select id="role"></select>
+      <div class="role-hint" id="roleHint"></div>
+    </div>
+  </aside>
+  <main class="main">
+    <header class="top">
+      <button class="menu-btn" id="menuBtn" aria-label="Menu">☰</button>
+      <div class="top-l">
+        <h1 id="title"></h1>
+        <div class="crumb" id="crumb"></div>
+      </div>
+      <div class="top-right">
+        <div class="period" id="period"></div>
+        <button class="demo-tag" id="reset" title="Kembalikan data contoh ke kondisi awal">Demo · reset data</button>
+      </div>
+    </header>
+    <section class="view" id="view">
+      <h2>Aplikasi Standar Satuan Harga (SSH) untuk pemerintah daerah</h2>
+      <p>Instansi mengusulkan barang dan harga lewat grid ala Excel atau formulir, approval memeriksa dengan bantuan analisis harga otomatis, periode dikunci lalu ditetapkan, dan masyarakat mencari standar harga yang sudah disetujui tanpa login.</p>
+      <p>Memuat demo. Aktifkan JavaScript bila halaman ini tidak berubah.</p>
+    </section>
+    <footer class="foot">Demo produk. Nama pemda, OPD, pengguna, kode, dan harga adalah contoh, dan data hanya tersimpan di browser Anda. Dibuat oleh <a href="https://pluton.id/id/work/standar-satuan-harga">Pluton</a>. Butuh sistem seperti ini? <a class="cta" href="https://pluton.id/id/contact">Hubungi kami</a>.</footer>
+  </main>
+</div>
+<div id="toast" class="toast" hidden></div>
+<div id="print"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" defer></script>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
